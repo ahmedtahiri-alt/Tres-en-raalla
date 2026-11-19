@@ -1,0 +1,106 @@
+import java.util.Scanner;
+
+public class TresEnRatllap {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        char[][] tauler = {
+            {' ', ' ', ' '},
+            {' ', ' ', ' '},
+            {' ', ' ', ' '}
+        };
+        char jugador = 'X';
+        boolean jocAcabat = false;
+
+        System.out.println("==========================\n      TRES EN RATLLA\n==========================");
+
+        while (!jocAcabat) {
+            
+            System.out.println("\n   a   b   c");
+            for (int f = 0; f < 3; f++) {
+                System.out.printf("%d  %c | %c | %c\n", f, tauler[f][0], tauler[f][1], tauler[f][2]);
+                if (f < 2) System.out.println("  ---+---+---");
+            }
+            System.out.println();
+
+            int fila = -1;
+            int col = -1;
+            boolean movimentValid = false;
+
+            while (!movimentValid) {
+                System.out.println("Torn del jugador " + jugador);
+                System.out.print("Introdueix columna i fila (ex: b1): ");
+                String entrada = sc.nextLine().replace(" ", "").toLowerCase();
+
+                if (entrada.length() != 2) {
+                    System.out.println("Format incorrecte.");
+                } else {
+                    col = entrada.charAt(0) - 'a';
+                    fila = entrada.charAt(1) - '0';
+
+                    if (fila < 0 || fila > 2 || col < 0 || col > 2) {
+                        System.out.println("Fora de rang (columnes a-c, files 0-2).");
+                    } else if (tauler[fila][col] != ' ') {
+                        System.out.println("Casella ocupada.");
+                    } else {
+                        movimentValid = true;
+                    }
+                }
+            }
+
+            tauler[fila][col] = jugador;
+
+            boolean guanyador = false;
+            
+            for (int i = 0; i < 3; i++) {
+                // Comprovar files
+                if (tauler[i][0] == jugador && tauler[i][1] == jugador && tauler[i][2] == jugador) {
+                    guanyador = true;
+                }
+                // Comprovar columnes
+                if (tauler[0][i] == jugador && tauler[1][i] == jugador && tauler[2][i] == jugador) {
+                    guanyador = true;
+                }
+            }
+            if (tauler[1][1] == jugador) {
+                if (tauler[0][0] == jugador && tauler[2][2] == jugador) guanyador = true;
+                if (tauler[0][2] == jugador && tauler[2][0] == jugador) guanyador = true;
+            }
+
+            if (guanyador) {
+                System.out.println("\n   a   b   c");
+                for (int f = 0; f < 3; f++) {
+                    System.out.printf("%d  %c | %c | %c\n", f, tauler[f][0], tauler[f][1], tauler[f][2]);
+                    if (f < 2) System.out.println("  ---+---+---");
+                }
+                System.out.println("\nJugador " + jugador + " ha guanyat!");
+                jocAcabat = true;
+                
+            } else {
+                
+                boolean taulerPle = true;
+                for (int f = 0; f < 3; f++) {
+                    for (int c = 0; c < 3; c++) {
+                        if (tauler[f][c] == ' ') {
+                            taulerPle = false;
+                            break;
+                        }
+                    }
+                    if (!taulerPle) break; 
+                }
+
+                if (taulerPle) {
+                    System.out.println("\n   a   b   c");
+                    for (int f = 0; f < 3; f++) {
+                        System.out.printf("%d  %c | %c | %c\n", f, tauler[f][0], tauler[f][1], tauler[f][2]);
+                        if (f < 2) System.out.println("  ---+---+---");
+                    }
+                    System.out.println("\nEmpat! No hi ha guanyador.");
+                    jocAcabat = true;
+                } else {
+                    
+                    jugador = (jugador == 'X') ? 'O' : 'X';
+                }
+            }
+        }
+    }
+}
